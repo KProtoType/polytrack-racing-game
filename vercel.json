@@ -1,15 +1,10 @@
 {
-  "functions": {
-    "public/**/*.html": {
-      "runtime": "@vercel/static"
-    }
-  },
-  "routes": [
-    { "src": "/(.*)", "dest": "/public/$1" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/public/$1" }
   ],
   "headers": [
     {
-      "source": "/public/(.*)",
+      "source": "/(.*\\.(js|css|html))",
       "headers": [
         {
           "key": "Cache-Control",
@@ -18,7 +13,7 @@
       ]
     },
     {
-      "source": "/public/index.html",
+      "source": "/index.html",
       "headers": [
         {
           "key": "Cache-Control",
