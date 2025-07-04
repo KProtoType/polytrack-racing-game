@@ -289,6 +289,13 @@ class UI {
     }
     
     showLoading() {
+        // Hide menus but keep game UI hidden during loading
+        this.elements.mainMenu.classList.add('hidden');
+        this.elements.pauseMenu.classList.add('hidden');
+        this.elements.raceComplete.classList.add('hidden');
+        this.elements.instructions.classList.add('hidden');
+        this.elements.gameUI.classList.add('hidden');
+        
         this.elements.loadingScreen.classList.remove('hidden');
     }
     
@@ -297,6 +304,14 @@ class UI {
     }
     
     showGameUI() {
+        // Hide all menus first
+        this.elements.mainMenu.classList.add('hidden');
+        this.elements.pauseMenu.classList.add('hidden');
+        this.elements.raceComplete.classList.add('hidden');
+        this.elements.loadingScreen.classList.add('hidden');
+        this.elements.instructions.classList.add('hidden');
+        
+        // Then show game UI
         this.elements.gameUI.classList.remove('hidden');
     }
     
