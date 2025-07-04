@@ -366,7 +366,11 @@ class Game {
         // Create car
         this.car = new Car();
         this.car.addToScene(this.scene);
-        this.car.reset();
+        
+        // Position car at track start
+        const startPosition = this.track.getStartPosition();
+        const startRotation = this.track.getStartRotation();
+        this.car.reset(startPosition, startRotation);
         
         // Position camera
         this.cameraController.setTarget(this.car);
@@ -385,8 +389,10 @@ class Game {
     }
     
     resetCarPosition() {
-        if (this.car) {
-            this.car.reset();
+        if (this.car && this.track) {
+            const startPosition = this.track.getStartPosition();
+            const startRotation = this.track.getStartRotation();
+            this.car.reset(startPosition, startRotation);
         }
     }
     

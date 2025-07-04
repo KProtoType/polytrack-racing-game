@@ -262,9 +262,19 @@ class Car {
         this.mesh.rotation.y = this.rotation.y;
     }
     
-    reset() {
-        this.position.set(0, this.groundHeight, 0);
-        this.rotation.set(0, 0, 0);
+    reset(startPosition = null, startRotation = null) {
+        if (startPosition) {
+            this.position.copy(startPosition);
+        } else {
+            this.position.set(0, this.groundHeight, 0);
+        }
+        
+        if (startRotation !== null) {
+            this.rotation.set(0, startRotation, 0);
+        } else {
+            this.rotation.set(0, 0, 0);
+        }
+        
         this.velocity.set(0, 0, 0);
         this.angularVelocity = 0;
         this.steerAngle = 0;
