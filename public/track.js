@@ -84,8 +84,7 @@ class Track {
             // Create track segment geometry
             const segmentGeometry = new THREE.PlaneGeometry(this.trackWidth, direction.length() * 20);
             const segmentMaterial = new THREE.MeshLambertMaterial({
-                color: 0x333333,
-                flatShading: true
+                color: 0x333333
             });
             
             const segment = new THREE.Mesh(segmentGeometry, segmentMaterial);
@@ -103,8 +102,7 @@ class Track {
         // Create ground plane
         const groundGeometry = new THREE.PlaneGeometry(200, 200);
         const groundMaterial = new THREE.MeshLambertMaterial({
-            color: 0x2d5a27,
-            flatShading: true
+            color: 0x2d5a27
         });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
@@ -120,8 +118,7 @@ class Track {
         if (index % 4 === 0) {
             const lineGeometry = new THREE.BoxGeometry(0.2, 0.05, 2);
             const lineMaterial = new THREE.MeshLambertMaterial({
-                color: 0xffff00,
-                flatShading: true
+                color: 0xffff00
             });
             const line = new THREE.Mesh(lineGeometry, lineMaterial);
             line.position.set(current.x, current.y + 0.02, current.z);
@@ -131,8 +128,7 @@ class Track {
         // Side lines
         const sideLineGeometry = new THREE.BoxGeometry(0.3, 0.05, 1);
         const sideLineMaterial = new THREE.MeshLambertMaterial({
-            color: 0xffffff,
-            flatShading: true
+            color: 0xffffff
         });
         
         // Left side line
@@ -180,8 +176,7 @@ class Track {
     createBarrierSegment(point, perpendicular, offset, type) {
         const barrierGeometry = new THREE.BoxGeometry(1, 2, 1);
         const barrierMaterial = new THREE.MeshLambertMaterial({
-            color: type === 'outer' ? 0xff4444 : 0x4444ff,
-            flatShading: true
+            color: type === 'outer' ? 0xff4444 : 0x4444ff
         });
         
         const barrier = new THREE.Mesh(barrierGeometry, barrierMaterial);
@@ -218,8 +213,7 @@ class Track {
             const checkpointMaterial = new THREE.MeshLambertMaterial({
                 color: 0x00ff00,
                 transparent: true,
-                opacity: 0.3,
-                flatShading: true
+                opacity: 0.3
             });
             
             const checkpointMesh = new THREE.Mesh(checkpointGeometry, checkpointMaterial);
@@ -237,8 +231,7 @@ class Track {
         const finishMaterial = new THREE.MeshLambertMaterial({
             color: 0xffffff,
             transparent: true,
-            opacity: 0.8,
-            flatShading: true
+            opacity: 0.8
         });
         
         this.startFinishLine = new THREE.Mesh(finishGeometry, finishMaterial);
@@ -280,8 +273,7 @@ class Track {
         // Trunk
         const trunkGeometry = new THREE.CylinderGeometry(0.3, 0.5, 3, 6);
         const trunkMaterial = new THREE.MeshLambertMaterial({
-            color: 0x8B4513,
-            flatShading: true
+            color: 0x8B4513
         });
         const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
         trunk.position.y = 1.5;
@@ -291,8 +283,7 @@ class Track {
         // Leaves
         const leavesGeometry = new THREE.ConeGeometry(2, 4, 8);
         const leavesMaterial = new THREE.MeshLambertMaterial({
-            color: 0x228B22,
-            flatShading: true
+            color: 0x228B22
         });
         const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
         leaves.position.y = 4;
@@ -306,8 +297,7 @@ class Track {
     createRock(x, y, z) {
         const rockGeometry = new THREE.DodecahedronGeometry(Math.random() * 1 + 0.5, 0);
         const rockMaterial = new THREE.MeshLambertMaterial({
-            color: 0x696969,
-            flatShading: true
+            color: 0x696969
         });
         const rock = new THREE.Mesh(rockGeometry, rockMaterial);
         rock.position.set(x, y + 0.5, z);
@@ -325,8 +315,7 @@ class Track {
         const boostMaterial = new THREE.MeshLambertMaterial({
             color: 0xff6600,
             transparent: true,
-            opacity: 0.7,
-            flatShading: true
+            opacity: 0.7
         });
         const boost = new THREE.Mesh(boostGeometry, boostMaterial);
         boost.position.set(x, y + 0.1, z);

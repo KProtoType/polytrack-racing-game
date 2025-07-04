@@ -193,39 +193,14 @@ class Game {
         particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
         particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
         
-        const particleMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0.0 },
-                texture: { value: this.createParticleTexture() }
-            },
-            vertexShader: `
-                attribute float size;
-                attribute vec3 color;
-                varying vec3 vColor;
-                uniform float time;
-                
-                void main() {
-                    vColor = color;
-                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                    gl_PointSize = size * (300.0 / -mvPosition.z);
-                    gl_Position = projectionMatrix * mvPosition;
-                }
-            `,
-            fragmentShader: `
-                uniform sampler2D texture;
-                varying vec3 vColor;
-                
-                void main() {
-                    vec2 uv = gl_PointCoord;
-                    float distance = length(uv - 0.5);
-                    float alpha = 1.0 - smoothstep(0.3, 0.5, distance);
-                    gl_FragColor = vec4(vColor, alpha);
-                }
-            `,
-            blending: THREE.AdditiveBlending,
-            depthTest: false,
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 2,
             transparent: true,
-            vertexColors: true
+            opacity: 0.8,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthTest: false
         });
         
         this.particleSystem = new THREE.Points(particleGeometry, particleMaterial);
@@ -555,9 +530,6 @@ class Game {
     
     updateParticles() {
         if (!this.particleSystem) return;
-        
-        // Update particle system time uniform
-        this.particleSystem.material.uniforms.time.value = performance.now() * 0.001;
         
         // Update individual particles
         for (let i = this.particles.length - 1; i >= 0; i--) {

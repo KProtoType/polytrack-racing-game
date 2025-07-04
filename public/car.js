@@ -35,8 +35,7 @@ class Car {
         // Car body - low-poly design
         const bodyGeometry = new THREE.BoxGeometry(2, 0.8, 4);
         const bodyMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0x00ff88,
-            flatShading: true 
+            color: 0x00ff88
         });
         const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
         body.position.y = 0.4;
@@ -47,8 +46,7 @@ class Car {
         // Car roof
         const roofGeometry = new THREE.BoxGeometry(1.6, 0.6, 2);
         const roofMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0x0088ff,
-            flatShading: true 
+            color: 0x0088ff
         });
         const roof = new THREE.Mesh(roofGeometry, roofMaterial);
         roof.position.set(0, 1, 0.5);
@@ -60,8 +58,7 @@ class Car {
         const windshieldMaterial = new THREE.MeshLambertMaterial({ 
             color: 0x87CEEB,
             transparent: true,
-            opacity: 0.7,
-            flatShading: true 
+            opacity: 0.7
         });
         const windshield = new THREE.Mesh(windshieldGeometry, windshieldMaterial);
         windshield.position.set(0, 0.9, 1.2);
@@ -72,8 +69,7 @@ class Car {
         this.wheels = [];
         const wheelGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 8);
         const wheelMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0x333333,
-            flatShading: true 
+            color: 0x333333
         });
         
         const wheelPositions = [
@@ -96,8 +92,7 @@ class Car {
         const headlightGeometry = new THREE.SphereGeometry(0.15, 6, 6);
         const headlightMaterial = new THREE.MeshLambertMaterial({ 
             color: 0xffff88,
-            emissive: 0x444422,
-            flatShading: true 
+            emissive: 0x444422
         });
         
         const leftHeadlight = new THREE.Mesh(headlightGeometry, headlightMaterial);
@@ -111,8 +106,7 @@ class Car {
         // Taillights
         const taillightMaterial = new THREE.MeshLambertMaterial({ 
             color: 0xff0000,
-            emissive: 0x220000,
-            flatShading: true 
+            emissive: 0x220000
         });
         
         const leftTaillight = new THREE.Mesh(headlightGeometry, taillightMaterial);
@@ -126,8 +120,7 @@ class Car {
         // Spoiler for extra style
         const spoilerGeometry = new THREE.BoxGeometry(1.8, 0.1, 0.3);
         const spoilerMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0x0088ff,
-            flatShading: true 
+            color: 0x0088ff
         });
         const spoiler = new THREE.Mesh(spoilerGeometry, spoilerMaterial);
         spoiler.position.set(0, 1.2, -1.8);
