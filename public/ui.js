@@ -264,7 +264,7 @@ class UI {
     
     // Menu visibility methods
     showMainMenu() {
-        this.hideAll();
+        this.hideAllMenus();
         this.elements.mainMenu.classList.remove('hidden');
     }
     
@@ -277,7 +277,7 @@ class UI {
     }
     
     showRaceComplete(finalTime, isNewRecord) {
-        this.hideAll();
+        this.hideAllMenus();
         this.elements.raceComplete.classList.remove('hidden');
         this.elements.finalTime.textContent = `Time: ${this.formatTime(finalTime)}`;
         
@@ -313,6 +313,14 @@ class UI {
     }
     
     hideAll() {
+        this.elements.mainMenu.classList.add('hidden');
+        this.elements.pauseMenu.classList.add('hidden');
+        this.elements.raceComplete.classList.add('hidden');
+        this.elements.loadingScreen.classList.add('hidden');
+        this.elements.instructions.classList.add('hidden');
+    }
+    
+    hideAllMenus() {
         this.elements.mainMenu.classList.add('hidden');
         this.elements.pauseMenu.classList.add('hidden');
         this.elements.raceComplete.classList.add('hidden');

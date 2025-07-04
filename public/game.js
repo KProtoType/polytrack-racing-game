@@ -339,42 +339,59 @@ class Game {
     }
     
     startRace() {
+        console.log('Starting race...');
         this.gameState = 'loading';
         this.ui.showLoading();
         
         // Simulate loading time
         setTimeout(() => {
-            this.initializeRace();
-            this.gameState = 'racing';
-            this.ui.hideLoading();
-            this.ui.showGameUI();
-            this.raceStartTime = performance.now();
-            this.currentLap = 1;
-            this.lapTimes = [];
+            try {
+                console.log('Initializing race...');
+                this.initializeRace();
+                this.gameState = 'racing';
+                this.ui.hideLoading();
+                this.ui.showGameUI();
+                this.raceStartTime = performance.now();
+                this.currentLap = 1;
+                this.lapTimes = [];
+                console.log('Race started successfully!');
+            } catch (error) {
+                console.error('Error starting race:', error);
+                this.gameState = 'menu';
+                this.ui.hideLoading();
+                this.ui.showMainMenu();
+            }
         }, 1500);
     }
     
     initializeRace() {
+        console.log('Clearing existing objects...');
         // Clear existing objects
         if (this.car) this.scene.remove(this.car.mesh);
         if (this.track) this.track.removeFromScene(this.scene);
         
+        console.log('Creating track...');
         // Create track
         this.track = new Track();
         this.track.addToScene(this.scene);
         
+        console.log('Creating car...');
         // Create car
         this.car = new Car();
         this.car.addToScene(this.scene);
         
+        console.log('Positioning car...');
         // Position car at track start
         const startPosition = this.track.getStartPosition();
         const startRotation = this.track.getStartRotation();
+        console.log('Start position:', startPosition, 'Start rotation:', startRotation);
         this.car.reset(startPosition, startRotation);
         
+        console.log('Setting up camera...');
         // Position camera
         this.cameraController.setTarget(this.car);
         this.cameraController.reset();
+        console.log('Race initialization complete!');
     }
     
     pauseGame() {
