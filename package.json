@@ -1,0 +1,40 @@
+{
+  "name": "polytrack-racing-game",
+  "version": "1.0.0",
+  "description": "A 3D low-poly racing game built with Three.js",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000 --directory public || python -m http.server 3000 --directory public",
+    "build": "echo 'Static build complete - no build process required'",
+    "start": "npm run dev",
+    "preview": "npm run dev"
+  },
+  "keywords": [
+    "racing",
+    "game",
+    "3d",
+    "threejs",
+    "low-poly",
+    "javascript",
+    "webgl"
+  ],
+  "author": "Claude Code",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.128.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/polytrack-racing-game.git"
+  },
+  "homepage": "https://polytrack-racing-game.vercel.app",
+  "devDependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
