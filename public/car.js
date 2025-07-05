@@ -6,10 +6,10 @@ class Car {
         this.velocity = new THREE.Vector3(0, 0, 0);
         this.angularVelocity = 0;
         
-        // Car physics properties - improved for sharper turns
-        this.acceleration = 0.012;
-        this.maxSpeed = 0.8;
-        this.brakeForce = 0.015;
+        // Car physics properties - faster movement
+        this.acceleration = 0.025;
+        this.maxSpeed = 1.5;
+        this.brakeForce = 0.03;
         this.friction = 0.94;
         this.turnSpeed = 0.06;  // Moderate turning for realistic feel
         this.maxTurnSpeed = 0.08;  // Reasonable max turn rate
