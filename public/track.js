@@ -84,7 +84,7 @@ class Track {
             // Create track segment geometry
             const segmentGeometry = new THREE.PlaneGeometry(this.trackWidth, direction.length() * 20);
             const segmentMaterial = new THREE.MeshLambertMaterial({
-                color: 0x333333
+                color: 0x404040  // Lighter gray for better visibility
             });
             
             const segment = new THREE.Mesh(segmentGeometry, segmentMaterial);
@@ -114,42 +114,70 @@ class Track {
     }
     
     createTrackMarkings(trackGroup, current, next, perpendicular, index) {
-        // Center line
-        if (index % 4 === 0) {
-            const lineGeometry = new THREE.BoxGeometry(0.2, 0.05, 2);
+        // Center line - more frequent and visible
+        if (index % 2 === 0) {
+            const lineGeometry = new THREE.BoxGeometry(0.5, 0.1, 3);
             const lineMaterial = new THREE.MeshLambertMaterial({
                 color: 0xffff00
             });
             const line = new THREE.Mesh(lineGeometry, lineMaterial);
-            line.position.set(current.x, current.y + 0.02, current.z);
+            line.position.set(current.x, current.y + 0.05, current.z);
             trackGroup.add(line);
         }
         
-        // Side lines
-        const sideLineGeometry = new THREE.BoxGeometry(0.3, 0.05, 1);
+        // Side lines - bigger and brighter
+        const sideLineGeometry = new THREE.BoxGeometry(0.8, 0.1, 2);
         const sideLineMaterial = new THREE.MeshLambertMaterial({
             color: 0xffffff
         });
         
         // Left side line
         const leftLine = new THREE.Mesh(sideLineGeometry, sideLineMaterial);
-        const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 - 0.5);
+        const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 - 0.3);
         leftLine.position.set(
             current.x + leftPos.x,
-            current.y + 0.02,
+            current.y + 0.05,
             current.z + leftPos.z
         );
         trackGroup.add(leftLine);
         
         // Right side line
         const rightLine = new THREE.Mesh(sideLineGeometry, sideLineMaterial);
-        const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 + 0.5);
+        const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 + 0.3);
         rightLine.position.set(
             current.x + rightPos.x,
-            current.y + 0.02,
+            current.y + 0.05,
             current.z + rightPos.z
         );
         trackGroup.add(rightLine);
+        
+        // Add track edge markers for even better visibility
+        if (index % 3 === 0) {
+            const edgeGeometry = new THREE.BoxGeometry(1, 0.2, 1);
+            const edgeMaterial = new THREE.MeshLambertMaterial({
+                color: 0x00ff00
+            });
+            
+            // Left edge marker
+            const leftEdge = new THREE.Mesh(edgeGeometry, edgeMaterial);
+            const leftEdgePos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 + 1);
+            leftEdge.position.set(
+                current.x + leftEdgePos.x,
+                current.y + 0.1,
+                current.z + leftEdgePos.z
+            );
+            trackGroup.add(leftEdge);
+            
+            // Right edge marker
+            const rightEdge = new THREE.Mesh(edgeGeometry, edgeMaterial);
+            const rightEdgePos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 - 1);
+            rightEdge.position.set(
+                current.x + rightEdgePos.x,
+                current.y + 0.1,
+                current.z + rightEdgePos.z
+            );
+            trackGroup.add(rightEdge);
+        }
     }
     
     createBarriers() {

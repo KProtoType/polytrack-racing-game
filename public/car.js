@@ -6,14 +6,14 @@ class Car {
         this.velocity = new THREE.Vector3(0, 0, 0);
         this.angularVelocity = 0;
         
-        // Car physics properties
-        this.acceleration = 0.008;
+        // Car physics properties - improved for sharper turns
+        this.acceleration = 0.012;
         this.maxSpeed = 0.8;
-        this.brakeForce = 0.012;
-        this.friction = 0.95;
-        this.turnSpeed = 0.03;
-        this.maxTurnSpeed = 0.05;
-        this.handbrakeForce = 0.85;
+        this.brakeForce = 0.015;
+        this.friction = 0.94;
+        this.turnSpeed = 0.08;  // Much faster turning
+        this.maxTurnSpeed = 0.12;  // Higher max turn rate
+        this.handbrakeForce = 0.8;
         
         // Ground detection
         this.groundHeight = 0.5;
@@ -24,7 +24,7 @@ class Car {
         // Visual effects
         this.wheelRotation = 0;
         this.steerAngle = 0;
-        this.maxSteerAngle = 0.5;
+        this.maxSteerAngle = 0.8;  // Sharper steering angle
         
         this.createCarMesh();
     }
@@ -156,16 +156,16 @@ class Car {
             handbrake = mobileInputs.handbrake;
         }
         
-        // Calculate speed factor for turning (slower turning at high speeds)
-        const speedFactor = Math.max(0.3, 1 - (this.velocity.length() / this.maxSpeed) * 0.7);
+        // Calculate speed factor for turning (less penalty at high speeds)
+        const speedFactor = Math.max(0.6, 1 - (this.velocity.length() / this.maxSpeed) * 0.4);
         
         // Handle steering
         let targetSteerAngle = 0;
         if (left) targetSteerAngle = this.maxSteerAngle;
         if (right) targetSteerAngle = -this.maxSteerAngle;
         
-        // Smooth steering interpolation
-        this.steerAngle = THREE.MathUtils.lerp(this.steerAngle, targetSteerAngle, 0.15);
+        // Faster steering interpolation for sharper turns
+        this.steerAngle = THREE.MathUtils.lerp(this.steerAngle, targetSteerAngle, 0.25);
         
         // Apply turning (only when moving)
         const currentSpeed = this.velocity.length();
