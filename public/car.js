@@ -180,8 +180,8 @@ class Car {
         this.angularVelocity = this.steerAngle * turnRate;
         this.rotation.y += this.angularVelocity;
         
-        // Calculate movement direction based on car rotation
-        const direction = new THREE.Vector3(0, 0, 1);
+        // Calculate movement direction based on car rotation (towards camera)
+        const direction = new THREE.Vector3(0, 0, -1);  // Negative Z = towards camera
         direction.applyEuler(this.rotation);
         
         // Handle acceleration and braking

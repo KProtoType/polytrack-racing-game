@@ -43,13 +43,8 @@ class Track {
                 radius *= 1.2; // Another wide section
             }
             
-            // Add elevation changes
+            // Keep track completely flat
             let height = 0;
-            if (i >= 6 && i <= 10) {
-                height = Math.sin((i - 6) / 4 * Math.PI) * 3; // Hill
-            } else if (i >= 18 && i <= 22) {
-                height = -Math.sin((i - 18) / 4 * Math.PI) * 2; // Dip
-            }
             
             const x = centerX + Math.cos(angle) * radius;
             const z = centerZ + Math.sin(angle) * radius;
@@ -88,8 +83,7 @@ class Track {
             });
             
             const segment = new THREE.Mesh(segmentGeometry, segmentMaterial);
-            segment.position.set(current.x, current.y + 0.1, current.z);
-            segment.lookAt(next.x, next.y, next.z);
+            segment.position.set(current.x, 0.1, current.z);  // Force flat at y=0.1
             segment.receiveShadow = true;
             segment.castShadow = true;
             
@@ -122,7 +116,7 @@ class Track {
             emissive: 0x222200  // Slight glow
         });
         const line = new THREE.Mesh(lineGeometry, lineMaterial);
-        line.position.set(current.x, current.y + 0.25, current.z);
+        line.position.set(current.x, 0.25, current.z);  // Force flat
         trackGroup.add(line);
     }
     
@@ -144,7 +138,7 @@ class Track {
         const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 + 1);
         leftBarrier.position.set(
             current.x + leftPos.x,
-            current.y + 0.5,
+            0.5,  // Force flat
             current.z + leftPos.z
         );
         leftBarrier.rotation.z = Math.PI / 2;
@@ -156,7 +150,7 @@ class Track {
         const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 - 1);
         rightBarrier.position.set(
             current.x + rightPos.x,
-            current.y + 0.5,
+            0.5,  // Force flat
             current.z + rightPos.z
         );
         rightBarrier.rotation.z = Math.PI / 2;
@@ -452,7 +446,7 @@ class Track {
     
     getStartPosition() {
         const startPoint = this.trackPoints[0];
-        return new THREE.Vector3(startPoint.x, startPoint.y + 1, startPoint.z);
+        return new THREE.Vector3(startPoint.x, 1, startPoint.z);  // Force flat at y=1
     }
     
     getStartRotation() {
