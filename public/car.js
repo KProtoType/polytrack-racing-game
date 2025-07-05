@@ -140,21 +140,20 @@ class Car {
     }
     
     update(keys, mobileInputs = null) {
-        // Get input from keyboard or mobile
-        let forward, backward, left, right, handbrake;
+        // Always check keyboard first, mobile as fallback
+        let forward = keys['KeyW'] || keys['ArrowUp'];
+        let backward = keys['KeyS'] || keys['ArrowDown'];
+        let left = keys['KeyA'] || keys['ArrowLeft'];
+        let right = keys['KeyD'] || keys['ArrowRight'];
+        let handbrake = keys['Space'];
         
-        if (mobileInputs) {
+        // Use mobile inputs only if no keyboard input detected
+        if (mobileInputs && !forward && !backward && !left && !right && !handbrake) {
             forward = mobileInputs.forward;
             backward = mobileInputs.backward;
             left = mobileInputs.left;
             right = mobileInputs.right;
             handbrake = mobileInputs.handbrake;
-        } else {
-            forward = keys['KeyW'] || keys['ArrowUp'];
-            backward = keys['KeyS'] || keys['ArrowDown'];
-            left = keys['KeyA'] || keys['ArrowLeft'];
-            right = keys['KeyD'] || keys['ArrowRight'];
-            handbrake = keys['Space'];
         }
         
         // Calculate speed factor for turning (slower turning at high speeds)

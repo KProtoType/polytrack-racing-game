@@ -34,7 +34,7 @@ class Game {
         this.ui = new UI(this);
         this.cameraController = new CameraController(this.camera);
         this.setupParticleSystem();
-        this.setupAudio();
+        // this.setupAudio(); // Disabled for now
         
         this.loadBestTime();
         this.showMainMenu();
@@ -435,27 +435,19 @@ class Game {
                 this.createSpeedParticles(this.car.position, speed);
             }
             
-            // Play engine sound based on speed
-            if (speed > 5 && this.sounds.engine) {
-                const pitch = 1 + (speed / 100);
-                if (Math.random() < 0.1) { // Play occasionally to avoid spam
-                    this.sounds.engine.play(pitch);
-                }
-            }
+            // Engine sound disabled
             
             // Check lap completion
             const lapComplete = this.track.checkLapCompletion(this.car.position);
             if (lapComplete) {
                 this.completeLap();
-                if (this.sounds.checkpoint) {
-                    this.sounds.checkpoint.play();
-                }
+                // Checkpoint sound disabled
             }
             
             // Check collision with track boundaries
             const hadCollision = this.track.checkCollision(this.car);
-            if (hadCollision && this.sounds.collision) {
-                this.sounds.collision.play();
+            if (hadCollision) {
+                // Collision sound disabled
                 this.cameraController.shake(0.5);
             }
         }

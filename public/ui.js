@@ -11,7 +11,7 @@ class UI {
         };
         
         this.setupEventListeners();
-        this.setupMobileControls();
+        // this.setupMobileControls(); // Disabled for now
     }
     
     getUIElements() {
@@ -250,16 +250,9 @@ class UI {
         });
     }
     
-    // Get mobile control inputs for car
+    // Get mobile control inputs for car (disabled)
     getMobileInputs() {
-        return {
-            forward: this.touchData.accelerate,
-            backward: this.touchData.brake,
-            left: this.touchData.steering.currentAngle > 0.1,
-            right: this.touchData.steering.currentAngle < -0.1,
-            handbrake: this.touchData.handbrake,
-            steerAmount: this.touchData.steering.currentAngle
-        };
+        return null; // Mobile controls disabled
     }
     
     // Menu visibility methods

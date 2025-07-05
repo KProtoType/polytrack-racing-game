@@ -129,15 +129,9 @@ body {
     text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
 }
 
-/* Mobile Controls */
+/* Mobile Controls - Disabled for now */
 .mobile-only {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .mobile-only {
-        display: block;
-    }
+    display: none !important;
 }
 
 #mobileControls {
