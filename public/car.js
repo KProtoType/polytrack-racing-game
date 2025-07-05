@@ -11,8 +11,8 @@ class Car {
         this.maxSpeed = 0.8;
         this.brakeForce = 0.015;
         this.friction = 0.94;
-        this.turnSpeed = 0.08;  // Much faster turning
-        this.maxTurnSpeed = 0.12;  // Higher max turn rate
+        this.turnSpeed = 0.15;  // Very fast turning for sharp turns
+        this.maxTurnSpeed = 0.2;  // Much higher max turn rate
         this.handbrakeForce = 0.8;
         
         // Ground detection
@@ -167,13 +167,18 @@ class Car {
         // Faster steering interpolation for sharper turns
         this.steerAngle = THREE.MathUtils.lerp(this.steerAngle, targetSteerAngle, 0.25);
         
-        // Apply turning (only when moving)
+        // Apply turning (can turn even when stationary)
         const currentSpeed = this.velocity.length();
+        let turnRate;
         if (currentSpeed > 0.01) {
-            const turnRate = this.turnSpeed * speedFactor * (currentSpeed / this.maxSpeed);
-            this.angularVelocity = this.steerAngle * turnRate;
-            this.rotation.y += this.angularVelocity;
+            // Normal turning when moving
+            turnRate = this.turnSpeed * speedFactor;
+        } else {
+            // Allow stationary turning at reduced rate
+            turnRate = this.turnSpeed * 0.5;
         }
+        this.angularVelocity = this.steerAngle * turnRate;
+        this.rotation.y += this.angularVelocity;
         
         // Calculate movement direction based on car rotation
         const direction = new THREE.Vector3(0, 0, 1);

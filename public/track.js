@@ -81,22 +81,23 @@ class Track {
             // Calculate perpendicular vector for track width
             const perpendicular = new THREE.Vector3(-direction.z, 0, direction.x);
             
-            // Create track segment geometry
-            const segmentGeometry = new THREE.PlaneGeometry(this.trackWidth, direction.length() * 20);
+            // Create flat black track plate
+            const segmentGeometry = new THREE.BoxGeometry(this.trackWidth, 0.2, direction.length() * 20);
             const segmentMaterial = new THREE.MeshLambertMaterial({
-                color: 0x404040  // Lighter gray for better visibility
+                color: 0x000000  // Pure black
             });
             
             const segment = new THREE.Mesh(segmentGeometry, segmentMaterial);
-            segment.position.set(current.x, current.y, current.z);
+            segment.position.set(current.x, current.y + 0.1, current.z);
             segment.lookAt(next.x, next.y, next.z);
-            segment.rotation.x = -Math.PI / 2;
             segment.receiveShadow = true;
+            segment.castShadow = true;
             
             trackGroup.add(segment);
             
-            // Add track markings
+            // Add track markings and barriers
             this.createTrackMarkings(trackGroup, current, next, perpendicular, i);
+            this.createTrackBarriers(trackGroup, current, next, perpendicular, i);
         }
         
         // Create ground plane
@@ -114,70 +115,53 @@ class Track {
     }
     
     createTrackMarkings(trackGroup, current, next, perpendicular, index) {
-        // Center line - more frequent and visible
-        if (index % 2 === 0) {
-            const lineGeometry = new THREE.BoxGeometry(0.5, 0.1, 3);
-            const lineMaterial = new THREE.MeshLambertMaterial({
-                color: 0xffff00
-            });
-            const line = new THREE.Mesh(lineGeometry, lineMaterial);
-            line.position.set(current.x, current.y + 0.05, current.z);
-            trackGroup.add(line);
-        }
+        // Simple yellow center line
+        const lineGeometry = new THREE.BoxGeometry(0.3, 0.15, 4);
+        const lineMaterial = new THREE.MeshLambertMaterial({
+            color: 0xffff00,
+            emissive: 0x222200  // Slight glow
+        });
+        const line = new THREE.Mesh(lineGeometry, lineMaterial);
+        line.position.set(current.x, current.y + 0.25, current.z);
+        trackGroup.add(line);
+    }
+    
+    createTrackBarriers(trackGroup, current, next, perpendicular, index) {
+        // Long black cylinders on both sides
+        const distance = new THREE.Vector3(
+            next.x - current.x,
+            next.y - current.y,
+            next.z - current.z
+        ).length();
         
-        // Side lines - bigger and brighter
-        const sideLineGeometry = new THREE.BoxGeometry(0.8, 0.1, 2);
-        const sideLineMaterial = new THREE.MeshLambertMaterial({
-            color: 0xffffff
+        const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, distance * 20, 8);
+        const cylinderMaterial = new THREE.MeshLambertMaterial({
+            color: 0x000000
         });
         
-        // Left side line
-        const leftLine = new THREE.Mesh(sideLineGeometry, sideLineMaterial);
-        const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 - 0.3);
-        leftLine.position.set(
+        // Left barrier cylinder
+        const leftBarrier = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 + 1);
+        leftBarrier.position.set(
             current.x + leftPos.x,
-            current.y + 0.05,
+            current.y + 0.5,
             current.z + leftPos.z
         );
-        trackGroup.add(leftLine);
+        leftBarrier.rotation.z = Math.PI / 2;
+        leftBarrier.castShadow = true;
+        trackGroup.add(leftBarrier);
         
-        // Right side line
-        const rightLine = new THREE.Mesh(sideLineGeometry, sideLineMaterial);
-        const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 + 0.3);
-        rightLine.position.set(
+        // Right barrier cylinder
+        const rightBarrier = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 - 1);
+        rightBarrier.position.set(
             current.x + rightPos.x,
-            current.y + 0.05,
+            current.y + 0.5,
             current.z + rightPos.z
         );
-        trackGroup.add(rightLine);
-        
-        // Add track edge markers for even better visibility
-        if (index % 3 === 0) {
-            const edgeGeometry = new THREE.BoxGeometry(1, 0.2, 1);
-            const edgeMaterial = new THREE.MeshLambertMaterial({
-                color: 0x00ff00
-            });
-            
-            // Left edge marker
-            const leftEdge = new THREE.Mesh(edgeGeometry, edgeMaterial);
-            const leftEdgePos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 + 1);
-            leftEdge.position.set(
-                current.x + leftEdgePos.x,
-                current.y + 0.1,
-                current.z + leftEdgePos.z
-            );
-            trackGroup.add(leftEdge);
-            
-            // Right edge marker
-            const rightEdge = new THREE.Mesh(edgeGeometry, edgeMaterial);
-            const rightEdgePos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 - 1);
-            rightEdge.position.set(
-                current.x + rightEdgePos.x,
-                current.y + 0.1,
-                current.z + rightEdgePos.z
-            );
-            trackGroup.add(rightEdge);
-        }
+        rightBarrier.rotation.z = Math.PI / 2;
+        rightBarrier.castShadow = true;
+        trackGroup.add(rightBarrier);
     }
     
     createBarriers() {
@@ -271,28 +255,24 @@ class Track {
     createDecorations() {
         this.decorations = [];
         
-        // Add some trees and rocks around the track
-        for (let i = 0; i < 30; i++) {
+        // Add many scattered trees around the landscape
+        for (let i = 0; i < 100; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const distance = this.trackRadius + 15 + Math.random() * 20;
+            const distance = this.trackRadius + 20 + Math.random() * 40;
             const x = Math.cos(angle) * distance;
             const z = Math.sin(angle) * distance;
             
-            if (Math.random() > 0.5) {
-                // Create tree
+            if (Math.random() > 0.3) {
+                // Create tree (70% chance)
                 this.createTree(x, 0, z);
             } else {
-                // Create rock
+                // Create rock (30% chance)
                 this.createRock(x, 0, z);
             }
         }
         
-        // Add some speed boost pads on the track
-        for (let i = 0; i < 4; i++) {
-            const pointIndex = Math.floor(Math.random() * this.trackPoints.length);
-            const point = this.trackPoints[pointIndex];
-            this.createSpeedBoost(point.x, point.y, point.z);
-        }
+        // Create a river
+        this.createRiver();
     }
     
     createTree(x, y, z) {
@@ -338,18 +318,43 @@ class Track {
         this.decorations.push(rock);
     }
     
-    createSpeedBoost(x, y, z) {
-        const boostGeometry = new THREE.RingGeometry(1, 2, 6);
-        const boostMaterial = new THREE.MeshLambertMaterial({
-            color: 0xff6600,
-            transparent: true,
-            opacity: 0.7
-        });
-        const boost = new THREE.Mesh(boostGeometry, boostMaterial);
-        boost.position.set(x, y + 0.1, z);
-        boost.rotation.x = -Math.PI / 2;
-        boost.userData = { type: 'speedBoost' };
-        this.decorations.push(boost);
+    createRiver() {
+        // Create a winding river across the landscape
+        const riverPoints = [];
+        for (let i = 0; i < 20; i++) {
+            const t = i / 19;
+            const x = -80 + t * 160 + Math.sin(t * Math.PI * 3) * 20;
+            const z = -80 + t * 160 + Math.cos(t * Math.PI * 2) * 15;
+            riverPoints.push({ x, z });
+        }
+        
+        for (let i = 0; i < riverPoints.length - 1; i++) {
+            const current = riverPoints[i];
+            const next = riverPoints[i + 1];
+            
+            const length = Math.sqrt(
+                (next.x - current.x) ** 2 + (next.z - current.z) ** 2
+            );
+            
+            const riverGeometry = new THREE.BoxGeometry(8, 0.1, length);
+            const riverMaterial = new THREE.MeshLambertMaterial({
+                color: 0x4466aa,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const riverSegment = new THREE.Mesh(riverGeometry, riverMaterial);
+            riverSegment.position.set(
+                (current.x + next.x) / 2,
+                -0.05,
+                (current.z + next.z) / 2
+            );
+            
+            const angle = Math.atan2(next.z - current.z, next.x - current.x);
+            riverSegment.rotation.y = angle;
+            
+            this.decorations.push(riverSegment);
+        }
     }
     
     addToScene(scene) {
@@ -403,25 +408,7 @@ class Track {
             }
         });
         
-        // Check for speed boosts
-        this.decorations.forEach(decoration => {
-            if (decoration.userData && decoration.userData.type === 'speedBoost') {
-                const distance = carPosition.distanceTo(decoration.position);
-                if (distance < 3) {
-                    // Apply speed boost
-                    const boost = new THREE.Vector3(0, 0, 1);
-                    boost.applyEuler(car.getRotation());
-                    boost.multiplyScalar(0.3);
-                    car.velocity.add(boost);
-                    
-                    // Visual effect (make it glow)
-                    decoration.material.emissive.setHex(0x442200);
-                    setTimeout(() => {
-                        decoration.material.emissive.setHex(0x000000);
-                    }, 500);
-                }
-            }
-        });
+        // No speed boosts - removed for better control
         
         return hadCollision;
     }
