@@ -11,8 +11,8 @@ class Car {
         this.maxSpeed = 0.8;
         this.brakeForce = 0.015;
         this.friction = 0.94;
-        this.turnSpeed = 0.15;  // Very fast turning for sharp turns
-        this.maxTurnSpeed = 0.2;  // Much higher max turn rate
+        this.turnSpeed = 0.06;  // Moderate turning for realistic feel
+        this.maxTurnSpeed = 0.08;  // Reasonable max turn rate
         this.handbrakeForce = 0.8;
         
         // Ground detection
@@ -24,7 +24,7 @@ class Car {
         // Visual effects
         this.wheelRotation = 0;
         this.steerAngle = 0;
-        this.maxSteerAngle = 0.8;  // Sharper steering angle
+        this.maxSteerAngle = 0.5;  // Moderate steering angle
         
         this.createCarMesh();
     }
@@ -164,8 +164,8 @@ class Car {
         if (left) targetSteerAngle = this.maxSteerAngle;
         if (right) targetSteerAngle = -this.maxSteerAngle;
         
-        // Faster steering interpolation for sharper turns
-        this.steerAngle = THREE.MathUtils.lerp(this.steerAngle, targetSteerAngle, 0.25);
+        // Moderate steering interpolation for realistic turns
+        this.steerAngle = THREE.MathUtils.lerp(this.steerAngle, targetSteerAngle, 0.15);
         
         // Apply turning (can turn even when stationary)
         const currentSpeed = this.velocity.length();
@@ -180,8 +180,8 @@ class Car {
         this.angularVelocity = this.steerAngle * turnRate;
         this.rotation.y += this.angularVelocity;
         
-        // Calculate movement direction based on car rotation (towards camera)
-        const direction = new THREE.Vector3(0, 0, -1);  // Negative Z = towards camera
+        // Calculate movement direction based on car rotation (away from camera)
+        const direction = new THREE.Vector3(0, 0, 1);  // Positive Z = away from camera
         direction.applyEuler(this.rotation);
         
         // Handle acceleration and braking

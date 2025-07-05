@@ -5,8 +5,8 @@ class Track {
         this.checkpoints = [];
         this.startFinishLine = null;
         
-        // Track parameters
-        this.trackWidth = 8;
+        // Track parameters - single lane
+        this.trackWidth = 3;
         this.trackPoints = [];
         this.trackRadius = 40;
         this.checkpointsPassed = new Set();
@@ -76,14 +76,25 @@ class Track {
             // Calculate perpendicular vector for track width
             const perpendicular = new THREE.Vector3(-direction.z, 0, direction.x);
             
-            // Create flat black track plate
-            const segmentGeometry = new THREE.BoxGeometry(this.trackWidth, 0.2, direction.length() * 20);
+            // Create flat black track plate (shorter segments)
+            const segmentLength = Math.sqrt(
+                (next.x - current.x) ** 2 + (next.z - current.z) ** 2
+            );
+            const segmentGeometry = new THREE.BoxGeometry(this.trackWidth, 0.3, segmentLength);
             const segmentMaterial = new THREE.MeshLambertMaterial({
                 color: 0x000000  // Pure black
             });
             
             const segment = new THREE.Mesh(segmentGeometry, segmentMaterial);
-            segment.position.set(current.x, 0.1, current.z);  // Force flat at y=0.1
+            segment.position.set(
+                (current.x + next.x) / 2,  // Center between current and next
+                0.15,  // Slightly above ground
+                (current.z + next.z) / 2   // Center between current and next
+            );
+            
+            // Orient segment along track direction
+            const angle = Math.atan2(next.z - current.z, next.x - current.x);
+            segment.rotation.y = angle;
             segment.receiveShadow = true;
             segment.castShadow = true;
             
@@ -121,38 +132,40 @@ class Track {
     }
     
     createTrackBarriers(trackGroup, current, next, perpendicular, index) {
-        // Long black cylinders on both sides
-        const distance = new THREE.Vector3(
-            next.x - current.x,
-            next.y - current.y,
-            next.z - current.z
-        ).length();
+        // Black cylinders on both sides
+        const distance = Math.sqrt(
+            (next.x - current.x) ** 2 + (next.z - current.z) ** 2
+        );
         
-        const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, distance * 20, 8);
+        const cylinderGeometry = new THREE.CylinderGeometry(0.3, 0.3, distance, 8);
         const cylinderMaterial = new THREE.MeshLambertMaterial({
             color: 0x000000
         });
         
         // Left barrier cylinder
         const leftBarrier = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
-        const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 + 1);
+        const leftPos = perpendicular.clone().multiplyScalar(this.trackWidth / 2 + 0.8);
         leftBarrier.position.set(
-            current.x + leftPos.x,
-            0.5,  // Force flat
-            current.z + leftPos.z
+            (current.x + next.x) / 2 + leftPos.x,
+            0.3,  // Lower height
+            (current.z + next.z) / 2 + leftPos.z
         );
+        // Orient cylinder along track direction
+        const angle = Math.atan2(next.z - current.z, next.x - current.x);
+        leftBarrier.rotation.y = angle;
         leftBarrier.rotation.z = Math.PI / 2;
         leftBarrier.castShadow = true;
         trackGroup.add(leftBarrier);
         
         // Right barrier cylinder
         const rightBarrier = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
-        const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 - 1);
+        const rightPos = perpendicular.clone().multiplyScalar(-this.trackWidth / 2 - 0.8);
         rightBarrier.position.set(
-            current.x + rightPos.x,
-            0.5,  // Force flat
-            current.z + rightPos.z
+            (current.x + next.x) / 2 + rightPos.x,
+            0.3,  // Lower height
+            (current.z + next.z) / 2 + rightPos.z
         );
+        rightBarrier.rotation.y = angle;
         rightBarrier.rotation.z = Math.PI / 2;
         rightBarrier.castShadow = true;
         trackGroup.add(rightBarrier);
